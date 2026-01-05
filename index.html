@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Barbeque Pit | Portland, TN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flame-red: #C41E3A;
+            --cream: #f5f2eb;
+            --cream-dark: #e8e4d9;
+            --text-dark: #2d2a26;
+            --text-medium: #5a554d;
+            --charcoal: #1a1816;
+            --gold: #8B7355;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Smoke Animation Background */
+        .smoke-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.15;
+        }
+
+        .smoke-layer {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(196, 30, 58, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 30%, rgba(139, 115, 85, 0.1) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 80%, rgba(196, 30, 58, 0.06) 0%, transparent 45%);
+            animation: smokeFloat 25s ease-in-out infinite;
+        }
+
+        .smoke-layer:nth-child(2) {
+            animation-delay: -12s;
+            animation-duration: 30s;
+            opacity: 0.7;
+        }
+
+        @keyframes smokeFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5%, 3%) rotate(2deg); }
+            50% { transform: translate(3%, -5%) rotate(-1deg); }
+            75% { transform: translate(-3%, 2%) rotate(1deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(245, 242, 235, 0.98) 0%, transparent 100%);
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(245, 242, 235, 0.98);
+            padding: 1rem 3rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 0.1em;
+            color: var(--text-dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--flame-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--flame-red);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--flame-red);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .order-btn {
+            background: var(--flame-red);
+            color: white !important;
+            padding: 0.8rem 1.8rem !important;
+            border-radius: 4px;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .order-btn:hover {
+            background: #a01830 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(196, 30, 58, 0.3);
+        }
+
+        .order-btn::after {
+            display: none !important;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 28px;
+            height: 2px;
+            background: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(to bottom, rgba(245, 242, 235, 0.3) 0%, rgba(245, 242, 235, 0.9) 100%),
+                url('data:image/svg+xml,<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+            background-size: cover;
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border: 1px solid var(--flame-red);
+            color: var(--flame-red);
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 12vw, 10rem);
+            line-height: 0.9;
+            letter-spacing: 0.02em;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            opacity: 0;
+            animation: fadeSlideUp 0.8s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: var(--flame-red);
+        }
+
+        .hero-tagline {
+            font-size: 1.25rem;
+            color: var(--text-medium);
+            margin-bottom: 3rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s ease forwards;
+            animation-delay: 0.8s;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--flame-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #a01830;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(196, 30, 58, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-dark);
+            border: 1px solid var(--text-dark);
+        }
+
+        .btn-outline:hover {
+            background: var(--text-dark);
+            color: var(--cream);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--flame-red);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards, bounce 2s ease-in-out infinite;
+            animation-delay: 1.5s, 2s;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--flame-red);
+        }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Section Styles */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 8rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            color: var(--flame-red);
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            letter-spacing: 0.02em;
+            color: var(--text-dark);
+        }
+
+        /* About Section */
+        #about {
+            background: var(--cream);
+        }
+
+        .about-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            aspect-ratio: 4/3;
+            background: var(--cream-dark);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .about-image::before {
+            content: '🍖';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+            opacity: 0.3;
+        }
+
+        .about-content h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--flame-red);
+        }
+
+        .about-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-medium);
+            margin-bottom: 1.5rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--cream-dark);
+            border-radius: 8px;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--flame-red);
+        }
+
+        /* Photos Section */
+        #photos {
+            background: var(--cream-dark);
+            overflow: hidden;
+        }
+
+        .photo-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .photo-item {
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease, filter 0.3s ease;
+        }
+
+        .photo-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(15, 13, 11, 0.6) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .photo-item:hover::after {
+            opacity: 1;
+        }
+
+        .photo-item.large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        @media (max-width: 768px) {
+            .photo-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .photo-item.large {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox.active img {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--flame-red);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            background: #a01830;
+            transform: rotate(90deg);
+        }
+
+        /* Menu Section */
+        #menu {
+            background: var(--cream);
+        }
+
+        .menu-categories {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .menu-tab {
+            padding: 0.8rem 1.8rem;
+            background: transparent;
+            border: 1px solid var(--text-medium);
+            color: var(--text-dark);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-tab:hover, .menu-tab.active {
+            background: var(--flame-red);
+            border-color: var(--flame-red);
+            color: white;
+        }
+
+        .menu-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .menu-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .menu-item:hover {
+            border-color: var(--flame-red);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .menu-item-info h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .menu-item-info p {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            line-height: 1.5;
+        }
+
+        .menu-item-price {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--flame-red);
+            white-space: nowrap;
+        }
+
+        .menu-note {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        /* Reviews Section */
+        #reviews {
+            background: var(--cream-dark);
+        }
+
+        .reviews-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .review-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .review-card::before {
+            content: '"';
+            position: absolute;
+            top: 1rem;
+            left: 1.5rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            color: var(--flame-red);
+            opacity: 0.2;
+            line-height: 1;
+        }
+
+        .review-stars {
+            color: #d4a017;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-medium);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .review-author {
+            font-weight: 600;
+            color: var(--flame-red);
+        }
+
+        .review-source {
+            font-size: 0.8rem;
+            color: var(--text-medium);
+        }
+
+        /* Contact Section */
+        #contact {
+            background: var(--cream);
+        }
+
+        .contact-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .contact-block h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            color: var(--flame-red);
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.1em;
+        }
+
+        .contact-block p, .contact-block a {
+            font-size: 1.1rem;
+            color: var(--text-medium);
+            line-height: 1.8;
+            text-decoration: none;
+        }
+
+        .contact-block a:hover {
+            color: var(--flame-red);
+        }
+
+        .hours-grid {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .hours-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .hours-row span:first-child {
+            color: var(--text-medium);
+        }
+
+        .map-container {
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--cream-dark);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* CTA Banner */
+        .cta-banner {
+            background: var(--flame-red);
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-banner h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .cta-banner p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-banner .btn {
+            background: white;
+            color: var(--flame-red);
+        }
+
+        .cta-banner .btn:hover {
+            background: var(--cream);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--flame-red);
+        }
+
+        .footer-copy {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .about-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .reviews-grid {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+            }
+
+            .features {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 100%;
+                max-width: 300px;
+                background: var(--cream);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                transition: right 0.4s ease;
+                box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.open {
+                right: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .menu-toggle.open span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .menu-toggle.open span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle.open span:nth-child(3) {
+                transform: rotate(-45deg) translate(5px, -5px);
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 5rem 1.5rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Smoke Background -->
+    <div class="smoke-bg">
+        <div class="smoke-layer"></div>
+        <div class="smoke-layer"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#" class="logo">
+            <span class="logo-icon">🔥</span>
+            The Barbeque Pit
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about">About</a></li>
+            <li><a href="#photos">Photos</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="https://www.doordash.com/store/barbeque-pit-portland-2534016/" target="_blank" class="order-btn">Order Online</a></li>
+        </ul>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <span class="hero-badge">Portland, Tennessee Since Day One</span>
+            <h1>
+                The Barbeque
+                <span>Pit</span>
+            </h1>
+            <p class="hero-tagline">Real smoke. Real flavor. The kind of BBQ that brings you back home.</p>
+            <div class="hero-cta">
+                <a href="https://www.doordash.com/store/barbeque-pit-portland-2534016/" target="_blank" class="btn btn-primary">
+                    Order Online
+                </a>
+                <a href="#menu" class="btn btn-outline">View Menu</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-header reveal">
+            <span class="section-label">Our Story</span>
+            <h2 class="section-title">Low & Slow Since Forever</h2>
+        </div>
+        <div class="about-grid">
+            <div class="about-image reveal"></div>
+            <div class="about-content reveal">
+                <h3>Where BBQ is Done Right</h3>
+                <p>At The Barbeque Pit, we believe great barbecue can't be rushed. Our meats are smoked low and slow over real wood until they're fall-off-the-bone tender with that perfect smoke ring you crave.</p>
+                <p>Located in the heart of Portland, TN, we've been serving up authentic Southern BBQ to locals and travelers alike. Whether you're grabbing a quick lunch or feeding the whole family, we've got you covered.</p>
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">🔥</div>
+                        <div class="feature-label">Real Wood Smoked</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🚗</div>
+                        <div class="feature-label">Drive-Thru</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🎉</div>
+                        <div class="feature-label">We Cater!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photos Section -->
+    <section id="photos">
+        <div class="section-header reveal">
+            <span class="section-label">Take a Look</span>
+            <h2 class="section-title">The Pit</h2>
+        </div>
+        <div class="photo-grid reveal">
+            <div class="photo-item large">
+                <img src="images/interior.webp" alt="Restaurant Interior with BBQ decor" loading="lazy">
+            </div>
+            <div class="photo-item">
+                <img src="images/bbq-potato.webp" alt="BBQ Baked Potato with pulled pork and cornbread" loading="lazy">
+            </div>
+            <div class="photo-item">
+                <img src="images/nachos.webp" alt="BBQ Nachos with pulled pork and cheese" loading="lazy">
+            </div>
+            <div class="photo-item">
+                <img src="images/stew1.webp" alt="Brunswick Stew" loading="lazy">
+            </div>
+            <div class="photo-item">
+                <img src="images/stew2.webp" alt="Hearty Vegetable Stew" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu">
+        <div class="section-header reveal">
+            <span class="section-label">What We Serve</span>
+            <h2 class="section-title">The Menu</h2>
+        </div>
+        
+        <div class="menu-categories reveal">
+            <button class="menu-tab active" data-category="popular">Most Popular</button>
+            <button class="menu-tab" data-category="sandwiches">Sandwiches</button>
+            <button class="menu-tab" data-category="plates">Plates</button>
+            <button class="menu-tab" data-category="sides">Sides</button>
+        </div>
+
+        <div class="menu-grid reveal" id="menuGrid">
+            <!-- Popular Items -->
+            <div class="menu-item" data-category="popular">
+                <div class="menu-item-info">
+                    <h4>The Trash Can</h4>
+                    <p>Our legendary bowl loaded with smoked meats, beans, slaw, and all the fixings</p>
+                </div>
+                <span class="menu-item-price">$12.99</span>
+            </div>
+            <div class="menu-item" data-category="popular">
+                <div class="menu-item-info">
+                    <h4>BBQ Nachos</h4>
+                    <p>Crispy chips piled high with pulled pork, cheese, jalapeños, and our signature sauce</p>
+                </div>
+                <span class="menu-item-price">$10.99</span>
+            </div>
+            <div class="menu-item" data-category="popular">
+                <div class="menu-item-info">
+                    <h4>Rib Plate</h4>
+                    <p>Fall-off-the-bone ribs with two sides. Friday & Saturday only!</p>
+                </div>
+                <span class="menu-item-price">$15.99</span>
+            </div>
+            <div class="menu-item" data-category="popular">
+                <div class="menu-item-info">
+                    <h4>BBQ Baked Potato</h4>
+                    <p>Loaded baked potato topped with your choice of smoked meat</p>
+                </div>
+                <span class="menu-item-price">$9.99</span>
+            </div>
+
+            <!-- Sandwiches -->
+            <div class="menu-item hidden" data-category="sandwiches">
+                <div class="menu-item-info">
+                    <h4>Pulled Pork Sandwich</h4>
+                    <p>Tender smoked pork piled high on a fresh bun</p>
+                </div>
+                <span class="menu-item-price">$7.49</span>
+            </div>
+            <div class="menu-item hidden" data-category="sandwiches">
+                <div class="menu-item-info">
+                    <h4>Chopped Chicken Sandwich</h4>
+                    <p>Smoked chicken with our house sauce</p>
+                </div>
+                <span class="menu-item-price">$7.49</span>
+            </div>
+            <div class="menu-item hidden" data-category="sandwiches">
+                <div class="menu-item-info">
+                    <h4>Smoked Turkey Sandwich</h4>
+                    <p>Sliced turkey breast, perfectly smoked</p>
+                </div>
+                <span class="menu-item-price">$7.99</span>
+            </div>
+            <div class="menu-item hidden" data-category="sandwiches">
+                <div class="menu-item-info">
+                    <h4>Beef Brisket Sandwich</h4>
+                    <p>Tender sliced brisket with a perfect bark</p>
+                </div>
+                <span class="menu-item-price">$9.99</span>
+            </div>
+
+            <!-- Plates -->
+            <div class="menu-item hidden" data-category="plates">
+                <div class="menu-item-info">
+                    <h4>Two Meat Plate</h4>
+                    <p>Choose any two meats with two sides</p>
+                </div>
+                <span class="menu-item-price">$14.99</span>
+            </div>
+            <div class="menu-item hidden" data-category="plates">
+                <div class="menu-item-info">
+                    <h4>Three Meat Plate</h4>
+                    <p>Choose any three meats with two sides</p>
+                </div>
+                <span class="menu-item-price">$17.99</span>
+            </div>
+            <div class="menu-item hidden" data-category="plates">
+                <div class="menu-item-info">
+                    <h4>Value Pack 1</h4>
+                    <p>1 lb of meat, 8 buns, pint of slaw or beans</p>
+                </div>
+                <span class="menu-item-price">$25.99</span>
+            </div>
+            <div class="menu-item hidden" data-category="plates">
+                <div class="menu-item-info">
+                    <h4>Value Pack 2</h4>
+                    <p>2 lbs of meat, 16 buns, quart of slaw or beans</p>
+                </div>
+                <span class="menu-item-price">$48.99</span>
+            </div>
+
+            <!-- Sides -->
+            <div class="menu-item hidden" data-category="sides">
+                <div class="menu-item-info">
+                    <h4>Baked Beans</h4>
+                    <p>Sweet and smoky, made in-house</p>
+                </div>
+                <span class="menu-item-price">$2.99</span>
+            </div>
+            <div class="menu-item hidden" data-category="sides">
+                <div class="menu-item-info">
+                    <h4>Coleslaw</h4>
+                    <p>Tangy vinegar-based slaw</p>
+                </div>
+                <span class="menu-item-price">$2.29</span>
+            </div>
+            <div class="menu-item hidden" data-category="sides">
+                <div class="menu-item-info">
+                    <h4>Potato Salad</h4>
+                    <p>Creamy homestyle potato salad</p>
+                </div>
+                <span class="menu-item-price">$2.29</span>
+            </div>
+            <div class="menu-item hidden" data-category="sides">
+                <div class="menu-item-info">
+                    <h4>Cornbread Muffins</h4>
+                    <p>Soft, buttery, and fresh-baked</p>
+                </div>
+                <span class="menu-item-price">$4.99/doz</span>
+            </div>
+        </div>
+
+        <p class="menu-note reveal">* Prices may vary. Full menu available in-store or for online ordering.</p>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews">
+        <div class="section-header reveal">
+            <span class="section-label">What People Say</span>
+            <h2 class="section-title">The Reviews</h2>
+        </div>
+        <div class="reviews-grid">
+            <div class="review-card reveal">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">This is by far the best BBQ I've had, and the service is great! The Trash Can is legendary.</p>
+                <div class="review-author">Kassandra N.</div>
+                <div class="review-source">Google Review</div>
+            </div>
+            <div class="review-card reveal">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">Cornbread muffins are always so soft and buttery. The BBQ nachos never disappoint!</p>
+                <div class="review-author">Sierra L.</div>
+                <div class="review-source">DoorDash</div>
+            </div>
+            <div class="review-card reveal">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">It feels like you went to your grandma's house to eat. They cook it fresh and it is so good.</p>
+                <div class="review-author">Local Regular</div>
+                <div class="review-source">Yelp</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <div class="cta-banner reveal">
+        <h2>We Cater ANY Event!</h2>
+        <p>From backyard cookouts to corporate events, let us bring the BBQ to you.</p>
+        <a href="mailto:westbrandon@att.net" class="btn">Get in Touch</a>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-header reveal">
+            <span class="section-label">Find Us</span>
+            <h2 class="section-title">Come Hungry</h2>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-info reveal">
+                <div class="contact-block">
+                    <h4>Location</h4>
+                    <p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=The+Barbeque+Pit+608+N+Broadway+Portland+TN+37148" target="_blank">
+                            608 N Broadway<br>
+                            Portland, TN 37148
+                        </a>
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <h4>Contact</h4>
+                    <p>
+                        <a href="tel:6153237878">(615) 323-7878</a><br>
+                        <a href="mailto:westbrandon@att.net">westbrandon@att.net</a>
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <h4>Hours</h4>
+                    <div class="hours-grid">
+                        <div class="hours-row">
+                            <span>Monday - Saturday</span>
+                            <span>10:30 AM - 8:00 PM</span>
+                        </div>
+                        <div class="hours-row">
+                            <span>Sunday</span>
+                            <span>Closed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="map-container reveal">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3213.0!2d-86.5165!3d36.5818!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzbCsDM0JzU0LjUiTiA4NsKwMzAnNTkuNCJX!5e0!3m2!1sen!2sus!4v1" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" aria-label="Close">×</button>
+        <img src="" alt="Enlarged photo">
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">The Barbeque Pit</div>
+        <div class="footer-links">
+            <a href="#about">About</a>
+            <a href="#photos">Photos</a>
+            <a href="#menu">Menu</a>
+            <a href="#reviews">Reviews</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <p class="footer-copy">© 2025 The Barbeque Pit. All rights reserved. | Portland, TN</p>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('open');
+            navLinks.classList.toggle('open');
+        });
+
+        // Close mobile menu on link click
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('open');
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // Menu category tabs
+        const menuTabs = document.querySelectorAll('.menu-tab');
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        menuTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.dataset.category;
+                
+                // Update active tab
+                menuTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Filter menu items with animation
+                menuItems.forEach(item => {
+                    if (item.dataset.category === category) {
+                        item.classList.remove('hidden');
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // Add hidden class styling
+        const style = document.createElement('style');
+        style.textContent = '.menu-item.hidden { display: none; } .menu-item { transition: opacity 0.3s ease, transform 0.3s ease; }';
+        document.head.appendChild(style);
+
+        // Scroll reveal animations
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealOnScroll = () => {
+            revealElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                if (rect.top < windowHeight - 100) {
+                    el.classList.add('visible');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Lightbox functionality
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = lightbox.querySelector('img');
+        const lightboxClose = lightbox.querySelector('.lightbox-close');
+        const photoItems = document.querySelectorAll('.photo-item');
+
+        photoItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const img = item.querySelector('img');
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    </script>
+</body>
+</html>

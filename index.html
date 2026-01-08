@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Barbeque Pit | Portland, TN</title>
+    <title>The Barbeque Pit | Portland, TN - Real Smoked BBQ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --flame-red: #C41E3A;
+            --red-primary: #C41E3A;
+            --red-dark: #9a1729;
             --cream: #f5f2eb;
             --cream-dark: #e8e4d9;
             --text-dark: #2d2a26;
             --text-medium: #5a554d;
             --charcoal: #1a1816;
-            --gold: #8B7355;
         }
 
         * {
@@ -30,106 +30,81 @@
 
         body {
             font-family: 'DM Sans', sans-serif;
-            background: var(--cream);
+            background: 
+                linear-gradient(rgba(245, 242, 235, 0.85), rgba(245, 242, 235, 0.85)),
+                url('images/creamparchment.png');
+            background-attachment: fixed;
+            background-size: auto, 400px 400px;
             color: var(--text-dark);
             overflow-x: hidden;
         }
 
-        /* Smoke Animation Background */
-        .smoke-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.15;
-        }
-
-        .smoke-layer {
-            position: absolute;
-            width: 200%;
-            height: 200%;
+        /* Wood texture background */
+        .wood-bg {
             background: 
-                radial-gradient(ellipse at 20% 50%, rgba(196, 30, 58, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 30%, rgba(139, 115, 85, 0.1) 0%, transparent 40%),
-                radial-gradient(ellipse at 50% 80%, rgba(196, 30, 58, 0.06) 0%, transparent 45%);
-            animation: smokeFloat 25s ease-in-out infinite;
+                linear-gradient(rgba(26, 24, 22, 0.4), rgba(26, 24, 22, 0.4)),
+                url('images/wood.png');
+            background-size: auto, 300px 300px;
         }
 
-        .smoke-layer:nth-child(2) {
-            animation-delay: -12s;
-            animation-duration: 30s;
-            opacity: 0.7;
-        }
-
-        @keyframes smokeFloat {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(-5%, 3%) rotate(2deg); }
-            50% { transform: translate(3%, -5%) rotate(-1deg); }
-            75% { transform: translate(-3%, 2%) rotate(1deg); }
-        }
-
-        /* Navigation */
+        /* ============================================
+           NAVIGATION
+        ============================================ */
         nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            padding: 1.5rem 3rem;
+            padding: 0.75rem 3rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(to bottom, rgba(245, 242, 235, 0.98) 0%, transparent 100%);
+            background: 
+                linear-gradient(rgba(26, 24, 22, 0.85), rgba(26, 24, 22, 0.85)),
+                url('images/wood.png');
+            background-size: auto, 300px 300px;
+            backdrop-filter: blur(10px);
             transition: all 0.4s ease;
         }
 
         nav.scrolled {
-            background: rgba(245, 242, 235, 0.98);
-            padding: 1rem 3rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 0.5rem 3rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
         }
 
         .logo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.8rem;
-            letter-spacing: 0.1em;
-            color: var(--text-dark);
-            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            text-decoration: none;
         }
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--flame-red);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
+        .logo img {
+            height: 50px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover img {
+            transform: scale(1.05);
         }
 
         .nav-links {
             display: flex;
-            gap: 2.5rem;
+            gap: 2rem;
             list-style: none;
+            align-items: center;
         }
 
         .nav-links a {
-            color: var(--text-dark);
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            position: relative;
             padding: 0.5rem 0;
+            position: relative;
             transition: color 0.3s ease;
         }
 
@@ -140,38 +115,36 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: var(--flame-red);
+            background: var(--red-primary);
             transition: width 0.3s ease;
         }
 
         .nav-links a:hover {
-            color: var(--flame-red);
+            color: white;
         }
 
         .nav-links a:hover::after {
             width: 100%;
         }
 
-        .order-btn {
-            background: var(--flame-red);
+        .nav-cta {
+            background: var(--red-primary) !important;
             color: white !important;
-            padding: 0.8rem 1.8rem !important;
+            padding: 0.7rem 1.5rem !important;
             border-radius: 4px;
             font-weight: 600 !important;
-            transition: all 0.3s ease !important;
         }
 
-        .order-btn:hover {
-            background: #a01830 !important;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(196, 30, 58, 0.3);
-        }
-
-        .order-btn::after {
+        .nav-cta::after {
             display: none !important;
         }
 
-        /* Mobile Menu Toggle */
+        .nav-cta:hover {
+            background: var(--red-dark) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(196, 30, 58, 0.3);
+        }
+
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -183,97 +156,117 @@
         .menu-toggle span {
             width: 28px;
             height: 2px;
-            background: var(--text-dark);
+            background: white;
             transition: all 0.3s ease;
         }
 
-        /* Hero Section */
+        /* ============================================
+           HERO SECTION
+        ============================================ */
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
             position: relative;
-            padding: 2rem;
             overflow: hidden;
         }
 
-        .hero-bg {
+        .hero-slider {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
             position: absolute;
             inset: 0;
             background: 
-                linear-gradient(to bottom, rgba(245, 242, 235, 0.3) 0%, rgba(245, 242, 235, 0.9) 100%),
-                url('data:image/svg+xml,<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
-            background-size: cover;
-            opacity: 0.5;
+                linear-gradient(
+                    to right,
+                    rgba(245, 242, 235, 0.97) 0%,
+                    rgba(245, 242, 235, 0.9) 40%,
+                    rgba(245, 242, 235, 0.5) 100%
+                );
         }
 
         .hero-content {
-            text-align: center;
             position: relative;
             z-index: 1;
-            max-width: 900px;
+            max-width: 650px;
+            padding: 2rem 4rem;
         }
 
         .hero-badge {
             display: inline-block;
-            padding: 0.5rem 1.5rem;
-            border: 1px solid var(--flame-red);
-            color: var(--flame-red);
-            font-size: 0.75rem;
-            letter-spacing: 0.3em;
+            padding: 0.4rem 1rem;
+            background: var(--red-primary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
-            margin-bottom: 2rem;
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
             opacity: 0;
-            animation: fadeSlideUp 0.8s ease forwards;
-            animation-delay: 0.2s;
+            animation: fadeSlideUp 0.6s ease forwards;
         }
 
         .hero h1 {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(4rem, 12vw, 10rem);
-            line-height: 0.9;
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            line-height: 0.95;
             letter-spacing: 0.02em;
-            margin-bottom: 1.5rem;
             color: var(--text-dark);
+            margin-bottom: 1rem;
             opacity: 0;
-            animation: fadeSlideUp 0.8s ease forwards;
-            animation-delay: 0.4s;
+            animation: fadeSlideUp 0.6s ease forwards 0.1s;
         }
 
         .hero h1 span {
-            display: block;
-            color: var(--flame-red);
+            color: var(--red-primary);
         }
 
         .hero-tagline {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             color: var(--text-medium);
-            margin-bottom: 3rem;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 450px;
             opacity: 0;
-            animation: fadeSlideUp 0.8s ease forwards;
-            animation-delay: 0.6s;
+            animation: fadeSlideUp 0.6s ease forwards 0.2s;
         }
 
         .hero-cta {
             display: flex;
-            gap: 1.5rem;
-            justify-content: center;
+            gap: 1rem;
             flex-wrap: wrap;
             opacity: 0;
-            animation: fadeSlideUp 0.8s ease forwards;
-            animation-delay: 0.8s;
+            animation: fadeSlideUp 0.6s ease forwards 0.3s;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 1rem 2.5rem;
-            font-size: 0.9rem;
+            padding: 1rem 2rem;
+            font-size: 0.85rem;
             font-weight: 600;
             text-decoration: none;
             text-transform: uppercase;
@@ -281,23 +274,24 @@
             border-radius: 4px;
             transition: all 0.3s ease;
             cursor: pointer;
+            border: none;
         }
 
         .btn-primary {
-            background: var(--flame-red);
+            background: var(--red-primary);
             color: white;
         }
 
         .btn-primary:hover {
-            background: #a01830;
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(196, 30, 58, 0.3);
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(196, 30, 58, 0.3);
         }
 
         .btn-outline {
             background: transparent;
             color: var(--text-dark);
-            border: 1px solid var(--text-dark);
+            border: 2px solid var(--text-dark);
         }
 
         .btn-outline:hover {
@@ -305,80 +299,89 @@
             color: var(--cream);
         }
 
-        .scroll-indicator {
-            position: absolute;
-            bottom: 3rem;
-            left: 50%;
-            transform: translateX(-50%);
+        .hero-features {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--flame-red);
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
+            gap: 2rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--red-primary);
             opacity: 0;
-            animation: fadeIn 1s ease forwards, bounce 2s ease-in-out infinite;
-            animation-delay: 1.5s, 2s;
+            animation: fadeSlideUp 0.6s ease forwards 0.4s;
         }
 
-        .scroll-indicator svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--flame-red);
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-medium);
+        }
+
+        .hero-feature span {
+            font-size: 1.2rem;
         }
 
         @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(10px); }
-        }
-
-        /* Section Styles */
+        /* ============================================
+           SECTION STYLES
+        ============================================ */
         section {
-            position: relative;
-            z-index: 1;
-            padding: 8rem 2rem;
+            padding: 6rem 2rem;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 5rem;
+            margin-bottom: 4rem;
         }
 
         .section-label {
             display: inline-block;
-            color: var(--flame-red);
+            color: var(--red-primary);
             font-size: 0.75rem;
-            letter-spacing: 0.3em;
+            font-weight: 600;
+            letter-spacing: 0.25em;
             text-transform: uppercase;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .section-title {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(3rem, 8vw, 5rem);
+            font-size: clamp(2.5rem, 6vw, 4rem);
             letter-spacing: 0.02em;
             color: var(--text-dark);
         }
 
-        /* About Section */
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-medium);
+            max-width: 600px;
+            margin: 1rem auto 0;
+        }
+
+        .section-divider {
+            width: 80px;
+            height: 3px;
+            background: var(--red-primary);
+            margin: 1.5rem auto 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ============================================
+           WELCOME / ABOUT SECTION
+        ============================================ */
         #about {
-            background: var(--cream);
+            background: transparent;
         }
 
         .about-grid {
-            max-width: 1200px;
-            margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
@@ -386,28 +389,25 @@
         }
 
         .about-image {
-            aspect-ratio: 4/3;
-            background: var(--cream-dark);
-            border-radius: 8px;
-            overflow: hidden;
             position: relative;
         }
 
-        .about-image::before {
-            content: '🍖';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 6rem;
-            opacity: 0.3;
+        .about-image img {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
         }
 
-        .about-content h3 {
+        .about-content h2 {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 1.5rem;
-            color: var(--flame-red);
+            color: var(--text-dark);
+        }
+
+        .about-content h2 span {
+            color: var(--red-primary);
         }
 
         .about-content p {
@@ -417,66 +417,413 @@
             margin-bottom: 1.5rem;
         }
 
-        .features {
+        .about-features {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
 
-        .feature {
+        .about-feature {
             text-align: center;
-            padding: 1.5rem;
-            background: var(--cream-dark);
+            padding: 1.5rem 1rem;
+            background: rgba(255,255,255,0.7);
             border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(196, 30, 58, 0.1);
         }
 
-        .feature-icon {
+        .about-feature-icon {
             font-size: 2rem;
             margin-bottom: 0.5rem;
         }
 
-        .feature-label {
+        .about-feature-text {
             font-size: 0.8rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: var(--flame-red);
+            color: var(--red-primary);
         }
 
-        /* Photos Section */
-        #photos {
+        /* ============================================
+           VALUE PACKS SECTION
+        ============================================ */
+        #value-packs {
+            background: 
+                linear-gradient(rgba(26, 24, 22, 0.5), rgba(26, 24, 22, 0.5)),
+                url('images/wood.png');
+            background-size: auto, 300px 300px;
+            position: relative;
+        }
+
+        #value-packs .section-label {
+            color: rgba(255,255,255,0.7);
+        }
+
+        #value-packs .section-title {
+            color: white;
+        }
+
+        #value-packs .section-subtitle {
+            color: rgba(255,255,255,0.8);
+        }
+
+        #value-packs .section-divider {
+            background: var(--red-primary);
+        }
+
+        .value-packs-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .value-pack-card {
+            background: var(--cream);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .value-pack-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .value-pack-image {
+            height: 180px;
             background: var(--cream-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
             overflow: hidden;
         }
 
-        .photo-grid {
-            max-width: 1400px;
+        .value-pack-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .value-pack-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--red-primary);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.3rem 0.6rem;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .value-pack-content {
+            padding: 1.5rem;
+        }
+
+        .value-pack-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .value-pack-serves {
+            font-size: 0.8rem;
+            color: var(--red-primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .value-pack-description {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .value-pack-price {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--red-primary);
+        }
+
+        /* ============================================
+           MENU SECTION - CLASSIC STYLE
+        ============================================ */
+        #menu {
+            background: transparent;
+            padding: 6rem 2rem;
+        }
+
+        .menu-board {
+            max-width: 1000px;
             margin: 0 auto;
+            background: rgba(253, 251, 247, 0.97);
+            border-radius: 4px;
+            box-shadow: 
+                0 2px 4px rgba(0,0,0,0.1),
+                0 8px 16px rgba(0,0,0,0.1),
+                0 16px 32px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .menu-header {
+            background: var(--red-primary);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .menu-header h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .menu-body {
+            padding: 2.5rem 3rem;
+        }
+
+        .menu-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .menu-category {
+            margin-bottom: 2rem;
+        }
+
+        .menu-category:last-child {
+            margin-bottom: 0;
+        }
+
+        .menu-category-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            color: var(--red-primary);
+            letter-spacing: 0.1em;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--red-primary);
+            margin-bottom: 1rem;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0.4rem 0;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        .menu-item-name {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .menu-item-dots {
+            flex: 1;
+            border-bottom: 1px dotted var(--text-medium);
+            margin: 0 0.5rem;
+            opacity: 0.4;
+            position: relative;
+            top: -4px;
+        }
+
+        .menu-item-price {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .menu-item-description {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-medium);
+            font-style: italic;
+            margin-top: -0.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-footer {
+            text-align: center;
+            padding: 1.5rem 2rem 2rem;
+            border-top: 2px dashed var(--cream-dark);
+            margin: 0 2rem;
+        }
+
+        .menu-footer p {
+            font-size: 0.85rem;
+            color: var(--text-medium);
+        }
+
+        .menu-cta {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        /* ============================================
+           DAILY SPECIALS SECTION
+        ============================================ */
+        #specials {
+            background: transparent;
+        }
+
+        .specials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .special-card {
+            background: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .special-card:hover {
+            border-color: var(--red-primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .special-day {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            color: var(--red-primary);
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5rem;
+        }
+
+        .special-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .special-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--red-primary);
+        }
+
+        .special-card.featured {
+            background: var(--red-primary);
+        }
+
+        .special-card.featured .special-day {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .special-card.featured .special-name {
+            color: white;
+        }
+
+        .special-card.featured .special-price {
+            color: white;
+        }
+
+        /* ============================================
+           CATERING CTA SECTION
+        ============================================ */
+        .catering-cta {
+            background: 
+                linear-gradient(rgba(26, 24, 22, 0.6), rgba(26, 24, 22, 0.6)),
+                url('images/wood.png');
+            background-size: auto, 300px 300px;
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .catering-cta h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .catering-cta p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.85);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .catering-cta .btn-primary {
+            background: var(--red-primary);
+        }
+
+        .catering-cta .btn-primary:hover {
+            background: var(--red-dark);
+        }
+
+        /* ============================================
+           PHOTOS SECTION
+        ============================================ */
+        #photos {
+            background: transparent;
+            padding: 6rem 2rem;
+        }
+
+        .photo-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .photo-item {
             aspect-ratio: 1;
             overflow: hidden;
             border-radius: 8px;
-            position: relative;
             cursor: pointer;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
 
         .photo-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease, filter 0.3s ease;
+            transition: transform 0.5s ease;
         }
 
         .photo-item::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(15, 13, 11, 0.6) 0%, transparent 50%);
+            background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -494,22 +841,11 @@
             grid-row: span 2;
         }
 
-        @media (max-width: 768px) {
-            .photo-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .photo-item.large {
-                grid-column: span 2;
-                grid-row: span 1;
-            }
-        }
-
         /* Lightbox */
         .lightbox {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0,0,0,0.95);
             z-index: 2000;
             display: flex;
             align-items: center;
@@ -529,12 +865,6 @@
             max-height: 90vh;
             object-fit: contain;
             border-radius: 8px;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .lightbox.active img {
-            transform: scale(1);
         }
 
         .lightbox-close {
@@ -543,148 +873,58 @@
             right: 2rem;
             width: 50px;
             height: 50px;
-            background: var(--flame-red);
+            background: var(--red-primary);
             border: none;
             border-radius: 50%;
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: all 0.3s ease;
         }
 
         .lightbox-close:hover {
-            background: #a01830;
+            background: var(--red-dark);
             transform: rotate(90deg);
         }
 
-        /* Menu Section */
-        #menu {
-            background: var(--cream);
-        }
-
-        .menu-categories {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-bottom: 4rem;
-        }
-
-        .menu-tab {
-            padding: 0.8rem 1.8rem;
-            background: transparent;
-            border: 1px solid var(--text-medium);
-            color: var(--text-dark);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .menu-tab:hover, .menu-tab.active {
-            background: var(--flame-red);
-            border-color: var(--flame-red);
-            color: white;
-        }
-
-        .menu-grid {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-        }
-
-        .menu-item {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .menu-item:hover {
-            border-color: var(--flame-red);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .menu-item-info h4 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.4rem;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .menu-item-info p {
-            font-size: 0.9rem;
-            color: var(--text-medium);
-            line-height: 1.5;
-        }
-
-        .menu-item-price {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.5rem;
-            color: var(--flame-red);
-            white-space: nowrap;
-        }
-
-        .menu-note {
-            text-align: center;
-            margin-top: 3rem;
-            color: var(--text-medium);
-            font-size: 0.9rem;
-        }
-
-        /* Reviews Section */
+        /* ============================================
+           REVIEWS SECTION
+        ============================================ */
         #reviews {
-            background: var(--cream-dark);
+            background: transparent;
         }
 
         .reviews-grid {
-            max-width: 1200px;
-            margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
         .review-card {
-            background: white;
-            padding: 2.5rem;
+            background: rgba(255,255,255,0.85);
+            padding: 2rem;
             border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
             position: relative;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .review-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
         }
 
         .review-card::before {
             content: '"';
-            position: absolute;
-            top: 1rem;
-            left: 1.5rem;
             font-family: 'Bebas Neue', sans-serif;
             font-size: 5rem;
-            color: var(--flame-red);
-            opacity: 0.2;
+            color: var(--red-primary);
+            opacity: 0.15;
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
             line-height: 1;
         }
 
@@ -705,7 +945,7 @@
 
         .review-author {
             font-weight: 600;
-            color: var(--flame-red);
+            color: var(--red-primary);
         }
 
         .review-source {
@@ -713,155 +953,132 @@
             color: var(--text-medium);
         }
 
-        /* Contact Section */
+        /* ============================================
+           CONTACT SECTION
+        ============================================ */
         #contact {
-            background: var(--cream);
+            background: transparent;
         }
 
         .contact-grid {
-            max-width: 1200px;
-            margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
         .contact-info {
             display: flex;
             flex-direction: column;
-            gap: 2.5rem;
+            gap: 2rem;
         }
 
         .contact-block h4 {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.3rem;
-            color: var(--flame-red);
-            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            color: var(--red-primary);
             letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
         }
 
-        .contact-block p, .contact-block a {
-            font-size: 1.1rem;
+        .contact-block p,
+        .contact-block a {
+            font-size: 1.05rem;
             color: var(--text-medium);
-            line-height: 1.8;
+            line-height: 1.7;
             text-decoration: none;
         }
 
         .contact-block a:hover {
-            color: var(--flame-red);
+            color: var(--red-primary);
         }
 
         .hours-grid {
             display: grid;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .hours-row {
             display: flex;
             justify-content: space-between;
             padding: 0.5rem 0;
-            border-bottom: 1px solid var(--cream-dark);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
         }
 
         .hours-row span:first-child {
             color: var(--text-medium);
         }
 
+        .hours-row span:last-child {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
         .map-container {
             border-radius: 8px;
             overflow: hidden;
-            background: var(--cream-dark);
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
         .map-container iframe {
             width: 100%;
             height: 100%;
+            min-height: 350px;
             border: 0;
         }
 
-        /* CTA Banner */
-        .cta-banner {
-            background: var(--flame-red);
-            padding: 5rem 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-banner h2 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            color: white;
-            margin-bottom: 1rem;
-        }
-
-        .cta-banner p {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta-banner .btn {
-            background: white;
-            color: var(--flame-red);
-        }
-
-        .cta-banner .btn:hover {
-            background: var(--cream);
-            transform: translateY(-3px);
-        }
-
-        /* Footer */
+        /* ============================================
+           FOOTER
+        ============================================ */
         footer {
-            background: var(--charcoal);
+            background: 
+                linear-gradient(rgba(26, 24, 22, 0.7), rgba(26, 24, 22, 0.7)),
+                url('images/wood.png');
+            background-size: auto, 300px 300px;
+            color: white;
             padding: 3rem 2rem;
             text-align: center;
-            position: relative;
-            z-index: 1;
         }
 
         .footer-logo {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.5rem;
-            color: white;
+            font-size: 1.8rem;
             margin-bottom: 1rem;
+            letter-spacing: 0.05em;
         }
 
         .footer-links {
             display: flex;
             justify-content: center;
             gap: 2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
         }
 
         .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255,255,255,0.7);
             text-decoration: none;
             font-size: 0.9rem;
             transition: color 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: var(--flame-red);
+            color: var(--red-primary);
         }
 
         .footer-copy {
             font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255,255,255,0.5);
         }
 
-        /* Scroll Animations */
+        /* ============================================
+           ANIMATIONS
+        ============================================ */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s ease;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
         }
 
         .reveal.visible {
@@ -869,21 +1086,27 @@
             transform: translateY(0);
         }
 
-        /* Responsive */
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
         @media (max-width: 1024px) {
+            .value-packs-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             .about-grid,
             .contact-grid {
                 grid-template-columns: 1fr;
                 gap: 3rem;
             }
 
-            .reviews-grid {
-                grid-template-columns: 1fr;
-                max-width: 600px;
+            .about-image::before {
+                display: none;
             }
 
-            .features {
-                grid-template-columns: repeat(3, 1fr);
+            .menu-columns {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
         }
 
@@ -899,13 +1122,15 @@
                 height: 100vh;
                 width: 100%;
                 max-width: 300px;
-                background: var(--cream);
+                background: 
+                    linear-gradient(rgba(26, 24, 22, 0.95), rgba(26, 24, 22, 0.95)),
+                    url('images/wood.png');
+                background-size: auto, 300px 300px;
                 flex-direction: column;
                 justify-content: center;
-                align-items: center;
                 gap: 2rem;
                 transition: right 0.4s ease;
-                box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+                box-shadow: -5px 0 30px rgba(0,0,0,0.3);
             }
 
             .nav-links.open {
@@ -928,51 +1153,73 @@
                 transform: rotate(-45deg) translate(5px, -5px);
             }
 
-            .menu-grid {
+            .hero-content {
+                padding: 2rem;
+            }
+
+            .hero-features {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-overlay {
+                background: 
+                    linear-gradient(
+                        to bottom,
+                        rgba(245, 242, 235, 0.95) 0%,
+                        rgba(245, 242, 235, 0.9) 100%
+                    );
+            }
+
+            .value-packs-grid {
                 grid-template-columns: 1fr;
             }
 
-            .features {
+            .specials-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .photo-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .photo-item.large {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-features {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-body {
+                padding: 1.5rem;
             }
 
             section {
-                padding: 5rem 1.5rem;
-            }
-
-            .hero-cta {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 280px;
-                justify-content: center;
+                padding: 4rem 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Animated Smoke Background -->
-    <div class="smoke-bg">
-        <div class="smoke-layer"></div>
-        <div class="smoke-layer"></div>
-    </div>
 
     <!-- Navigation -->
     <nav id="navbar">
         <a href="#" class="logo">
-            <span class="logo-icon">🔥</span>
-            The Barbeque Pit
+            <img src="images/logo.jpg" alt="The Barbeque Pit">
         </a>
         <ul class="nav-links" id="navLinks">
             <li><a href="#about">About</a></li>
-            <li><a href="#photos">Photos</a></li>
             <li><a href="#menu">Menu</a></li>
-            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#specials">Specials</a></li>
+            <li><a href="#photos">Photos</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li><a href="https://www.doordash.com/store/barbeque-pit-portland-2534016/" target="_blank" class="order-btn">Order Online</a></li>
+            <li><a href="https://www.doordash.com/store/barbeque-pit-portland-2534016/" target="_blank" class="nav-cta">Order Online</a></li>
         </ul>
         <div class="menu-toggle" id="menuToggle">
             <span></span>
@@ -982,81 +1229,130 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero" id="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-            <span class="hero-badge">Portland, Tennessee Since Day One</span>
-            <h1>
-                The Barbeque
-                <span>Pit</span>
-            </h1>
-            <p class="hero-tagline">Real smoke. Real flavor. The kind of BBQ that brings you back home.</p>
-            <div class="hero-cta">
-                <a href="https://www.doordash.com/store/barbeque-pit-portland-2534016/" target="_blank" class="btn btn-primary">
-                    Order Online
-                </a>
-                <a href="#menu" class="btn btn-outline">View Menu</a>
+    <section class="hero">
+        <div class="hero-slider">
+            <div class="hero-slide active">
+                <img src="images/bbq-potato.webp" alt="BBQ Baked Potato">
+            </div>
+            <div class="hero-slide">
+                <img src="images/nachos.webp" alt="BBQ Nachos">
+            </div>
+            <div class="hero-slide">
+                <img src="images/interior.webp" alt="Restaurant Interior">
             </div>
         </div>
-        <div class="scroll-indicator">
-            <span>Scroll</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14M19 12l-7 7-7-7"/>
-            </svg>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-badge">Proudly Serving Portland Since Day One</span>
+            <h1>Real Smoke.<br><span>Real Flavor.</span></h1>
+            <p class="hero-tagline">Hand-smoked BBQ the way it was meant to be. Tender, juicy, and falling off the bone. Come hungry, leave happy.</p>
+            <div class="hero-cta">
+                <a href="https://www.doordash.com/store/barbeque-pit-portland-2534016/" target="_blank" class="btn btn-primary">Order Online</a>
+                <a href="#menu" class="btn btn-outline">View Menu</a>
+            </div>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <span>🍖</span> Dine-In
+                </div>
+                <div class="hero-feature">
+                    <span>🚗</span> Drive-Thru
+                </div>
+                <div class="hero-feature">
+                    <span>📦</span> Takeout
+                </div>
+                <div class="hero-feature">
+                    <span>🎉</span> Catering
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- About Section -->
     <section id="about">
-        <div class="section-header reveal">
-            <span class="section-label">Our Story</span>
-            <h2 class="section-title">Low & Slow Since Forever</h2>
-        </div>
-        <div class="about-grid">
-            <div class="about-image reveal"></div>
-            <div class="about-content reveal">
-                <h3>Where BBQ is Done Right</h3>
-                <p>At The Barbeque Pit, we believe great barbecue can't be rushed. Our meats are smoked low and slow over real wood until they're fall-off-the-bone tender with that perfect smoke ring you crave.</p>
-                <p>Located in the heart of Portland, TN, we've been serving up authentic Southern BBQ to locals and travelers alike. Whether you're grabbing a quick lunch or feeding the whole family, we've got you covered.</p>
-                <div class="features">
-                    <div class="feature">
-                        <div class="feature-icon">🔥</div>
-                        <div class="feature-label">Real Wood Smoked</div>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">🚗</div>
-                        <div class="feature-label">Drive-Thru</div>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">🎉</div>
-                        <div class="feature-label">We Cater!</div>
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image reveal">
+                    <img src="images/interior.webp" alt="The Barbeque Pit Interior">
+                </div>
+                <div class="about-content reveal">
+                    <h2>Welcome to <span>The Pit</span></h2>
+                    <p>At The Barbeque Pit, we believe great BBQ can't be rushed. Our meats are smoked low and slow over real wood until they're fall-off-the-bone tender with that perfect smoke ring you crave.</p>
+                    <p>Located in the heart of Portland, TN, we've been serving up authentic Southern BBQ to locals and travelers alike. Whether you're grabbing a quick lunch, feeding the whole family, or planning your next big event — we've got you covered.</p>
+                    <div class="about-features">
+                        <div class="about-feature">
+                            <div class="about-feature-icon">🔥</div>
+                            <div class="about-feature-text">Real Wood Smoked</div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon">👨‍👩‍👧‍👦</div>
+                            <div class="about-feature-text">Family Owned</div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon">⭐</div>
+                            <div class="about-feature-text">5-Star Reviews</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Photos Section -->
-    <section id="photos">
+    <!-- Value Packs Section -->
+    <section id="value-packs">
         <div class="section-header reveal">
-            <span class="section-label">Take a Look</span>
-            <h2 class="section-title">The Pit</h2>
+            <span class="section-label">Feed The Whole Crew</span>
+            <h2 class="section-title">Value Packs</h2>
+            <p class="section-subtitle">Perfect for families, game day, or anytime you need to feed a crowd.</p>
+            <div class="section-divider"></div>
         </div>
-        <div class="photo-grid reveal">
-            <div class="photo-item large">
-                <img src="images/interior.webp" alt="Restaurant Interior with BBQ decor" loading="lazy">
-            </div>
-            <div class="photo-item">
-                <img src="images/bbq-potato.webp" alt="BBQ Baked Potato with pulled pork and cornbread" loading="lazy">
-            </div>
-            <div class="photo-item">
-                <img src="images/nachos.webp" alt="BBQ Nachos with pulled pork and cheese" loading="lazy">
-            </div>
-            <div class="photo-item">
-                <img src="images/stew1.webp" alt="Brunswick Stew" loading="lazy">
-            </div>
-            <div class="photo-item">
-                <img src="images/stew2.webp" alt="Hearty Vegetable Stew" loading="lazy">
+        <div class="container">
+            <div class="value-packs-grid">
+                <div class="value-pack-card reveal">
+                    <div class="value-pack-image">
+                        <img src="images/bbq-potato.webp" alt="Value Pack 1">
+                        <span class="value-pack-badge">Popular</span>
+                    </div>
+                    <div class="value-pack-content">
+                        <h3 class="value-pack-title">Value Pack 1</h3>
+                        <div class="value-pack-serves">Feeds 4</div>
+                        <p class="value-pack-description">1 lb of meat, 8 buns, pint of slaw or beans. Choose from pork, chicken, or turkey.</p>
+                        <div class="value-pack-price">$25.99</div>
+                    </div>
+                </div>
+                <div class="value-pack-card reveal">
+                    <div class="value-pack-image">
+                        <img src="images/nachos.webp" alt="Value Pack 2">
+                    </div>
+                    <div class="value-pack-content">
+                        <h3 class="value-pack-title">Value Pack 2</h3>
+                        <div class="value-pack-serves">Feeds 8</div>
+                        <p class="value-pack-description">2 lbs of meat, 16 buns, quart of slaw or beans. Choose from pork, chicken, or turkey.</p>
+                        <div class="value-pack-price">$48.99</div>
+                    </div>
+                </div>
+                <div class="value-pack-card reveal">
+                    <div class="value-pack-image">
+                        <img src="images/stew1.webp" alt="Picnic Pack">
+                    </div>
+                    <div class="value-pack-content">
+                        <h3 class="value-pack-title">Picnic Pack</h3>
+                        <div class="value-pack-serves">Feeds 12</div>
+                        <p class="value-pack-description">3 lbs of meat, 24 buns, quart of two sides. Perfect for parties!</p>
+                        <div class="value-pack-price">$69.99</div>
+                    </div>
+                </div>
+                <div class="value-pack-card reveal">
+                    <div class="value-pack-image">
+                        <img src="images/stew2.webp" alt="Party Pack">
+                        <span class="value-pack-badge">Best Value</span>
+                    </div>
+                    <div class="value-pack-content">
+                        <h3 class="value-pack-title">Party Pack</h3>
+                        <div class="value-pack-serves">Feeds 20+</div>
+                        <p class="value-pack-description">5 lbs of meat, 40 buns, gallon of two sides. Feed the whole team!</p>
+                        <div class="value-pack-price">$99.99</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1065,181 +1361,287 @@
     <section id="menu">
         <div class="section-header reveal">
             <span class="section-label">What We Serve</span>
-            <h2 class="section-title">The Menu</h2>
+            <h2 class="section-title">Our Menu</h2>
+            <div class="section-divider"></div>
         </div>
-        
-        <div class="menu-categories reveal">
-            <button class="menu-tab active" data-category="popular">Most Popular</button>
-            <button class="menu-tab" data-category="sandwiches">Sandwiches</button>
-            <button class="menu-tab" data-category="plates">Plates</button>
-            <button class="menu-tab" data-category="sides">Sides</button>
+        <div class="menu-board reveal">
+            <div class="menu-header">
+                <h2>The Barbeque Pit</h2>
+                <p>Portland, Tennessee</p>
+            </div>
+            <div class="menu-body">
+                <div class="menu-columns">
+                    <div class="menu-column">
+                        <div class="menu-category">
+                            <h3 class="menu-category-title">Sandwiches</h3>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Pulled Pork</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$7.49</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Chopped Chicken</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$7.49</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Smoked Turkey</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$7.99</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Beef Brisket</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$9.99</span>
+                            </div>
+                        </div>
+                        <div class="menu-category">
+                            <h3 class="menu-category-title">Plates</h3>
+                            <p class="menu-item-description">Served with your choice of two sides</p>
+                            <div class="menu-item">
+                                <span class="menu-item-name">One Meat Plate</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$11.99</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Two Meat Plate</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$14.99</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Three Meat Plate</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$17.99</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Rib Plate (Fri & Sat)</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$15.99</span>
+                            </div>
+                        </div>
+                        <div class="menu-category">
+                            <h3 class="menu-category-title">By The Pound</h3>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Pulled Pork</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$13.99/lb</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Chopped Chicken</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$13.99/lb</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Smoked Turkey</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$14.99/lb</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Beef Brisket</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$18.99/lb</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-column">
+                        <div class="menu-category">
+                            <h3 class="menu-category-title">Specialties</h3>
+                            <div class="menu-item">
+                                <span class="menu-item-name">The Trash Can</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$12.99</span>
+                            </div>
+                            <p class="menu-item-description">Loaded bowl with smoked meats, beans, slaw & fixings</p>
+                            <div class="menu-item">
+                                <span class="menu-item-name">BBQ Nachos</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$10.99</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">BBQ Baked Potato</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$9.99</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">BBQ Salad</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$10.99</span>
+                            </div>
+                        </div>
+                        <div class="menu-category">
+                            <h3 class="menu-category-title">Sides</h3>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Baked Beans</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$2.99</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Coleslaw</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$2.29</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Potato Salad</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$2.29</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Mac & Cheese</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$2.99</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Cornbread Muffins</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$4.99/doz</span>
+                            </div>
+                        </div>
+                        <div class="menu-category">
+                            <h3 class="menu-category-title">Drinks & Dessert</h3>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Sweet Tea / Unsweet Tea</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$2.49</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Lemonade</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$2.49</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Soft Drinks</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$2.29</span>
+                            </div>
+                            <div class="menu-item">
+                                <span class="menu-item-name">Banana Pudding</span>
+                                <span class="menu-item-dots"></span>
+                                <span class="menu-item-price">$3.99</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-footer">
+                <p>* Prices subject to change. Ask about daily specials!</p>
+            </div>
         </div>
+        <div class="menu-cta reveal">
+            <a href="https://www.doordash.com/store/barbeque-pit-portland-2534016/" target="_blank" class="btn btn-primary">Order Online Now</a>
+        </div>
+    </section>
 
-        <div class="menu-grid reveal" id="menuGrid">
-            <!-- Popular Items -->
-            <div class="menu-item" data-category="popular">
-                <div class="menu-item-info">
-                    <h4>The Trash Can</h4>
-                    <p>Our legendary bowl loaded with smoked meats, beans, slaw, and all the fixings</p>
+    <!-- Daily Specials -->
+    <section id="specials">
+        <div class="section-header reveal">
+            <span class="section-label">Don't Miss Out</span>
+            <h2 class="section-title">Daily Specials</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="container">
+            <div class="specials-grid">
+                <div class="special-card reveal">
+                    <div class="special-day">Monday</div>
+                    <div class="special-name">Pork Sandwich Combo</div>
+                    <div class="special-price">$9.99</div>
                 </div>
-                <span class="menu-item-price">$12.99</span>
-            </div>
-            <div class="menu-item" data-category="popular">
-                <div class="menu-item-info">
-                    <h4>BBQ Nachos</h4>
-                    <p>Crispy chips piled high with pulled pork, cheese, jalapeños, and our signature sauce</p>
+                <div class="special-card reveal">
+                    <div class="special-day">Tuesday</div>
+                    <div class="special-name">Chicken Plate</div>
+                    <div class="special-price">$10.99</div>
                 </div>
-                <span class="menu-item-price">$10.99</span>
-            </div>
-            <div class="menu-item" data-category="popular">
-                <div class="menu-item-info">
-                    <h4>Rib Plate</h4>
-                    <p>Fall-off-the-bone ribs with two sides. Friday & Saturday only!</p>
+                <div class="special-card reveal">
+                    <div class="special-day">Wednesday</div>
+                    <div class="special-name">Two Sandwich Deal</div>
+                    <div class="special-price">$12.99</div>
                 </div>
-                <span class="menu-item-price">$15.99</span>
-            </div>
-            <div class="menu-item" data-category="popular">
-                <div class="menu-item-info">
-                    <h4>BBQ Baked Potato</h4>
-                    <p>Loaded baked potato topped with your choice of smoked meat</p>
+                <div class="special-card featured reveal">
+                    <div class="special-day">Thursday</div>
+                    <div class="special-name">BBQ Baked Potato</div>
+                    <div class="special-price">$8.99</div>
                 </div>
-                <span class="menu-item-price">$9.99</span>
-            </div>
-
-            <!-- Sandwiches -->
-            <div class="menu-item hidden" data-category="sandwiches">
-                <div class="menu-item-info">
-                    <h4>Pulled Pork Sandwich</h4>
-                    <p>Tender smoked pork piled high on a fresh bun</p>
+                <div class="special-card reveal">
+                    <div class="special-day">Friday</div>
+                    <div class="special-name">Rib Plate</div>
+                    <div class="special-price">$14.99</div>
                 </div>
-                <span class="menu-item-price">$7.49</span>
-            </div>
-            <div class="menu-item hidden" data-category="sandwiches">
-                <div class="menu-item-info">
-                    <h4>Chopped Chicken Sandwich</h4>
-                    <p>Smoked chicken with our house sauce</p>
+                <div class="special-card reveal">
+                    <div class="special-day">Saturday</div>
+                    <div class="special-name">Family Pack Special</div>
+                    <div class="special-price">$39.99</div>
                 </div>
-                <span class="menu-item-price">$7.49</span>
-            </div>
-            <div class="menu-item hidden" data-category="sandwiches">
-                <div class="menu-item-info">
-                    <h4>Smoked Turkey Sandwich</h4>
-                    <p>Sliced turkey breast, perfectly smoked</p>
-                </div>
-                <span class="menu-item-price">$7.99</span>
-            </div>
-            <div class="menu-item hidden" data-category="sandwiches">
-                <div class="menu-item-info">
-                    <h4>Beef Brisket Sandwich</h4>
-                    <p>Tender sliced brisket with a perfect bark</p>
-                </div>
-                <span class="menu-item-price">$9.99</span>
-            </div>
-
-            <!-- Plates -->
-            <div class="menu-item hidden" data-category="plates">
-                <div class="menu-item-info">
-                    <h4>Two Meat Plate</h4>
-                    <p>Choose any two meats with two sides</p>
-                </div>
-                <span class="menu-item-price">$14.99</span>
-            </div>
-            <div class="menu-item hidden" data-category="plates">
-                <div class="menu-item-info">
-                    <h4>Three Meat Plate</h4>
-                    <p>Choose any three meats with two sides</p>
-                </div>
-                <span class="menu-item-price">$17.99</span>
-            </div>
-            <div class="menu-item hidden" data-category="plates">
-                <div class="menu-item-info">
-                    <h4>Value Pack 1</h4>
-                    <p>1 lb of meat, 8 buns, pint of slaw or beans</p>
-                </div>
-                <span class="menu-item-price">$25.99</span>
-            </div>
-            <div class="menu-item hidden" data-category="plates">
-                <div class="menu-item-info">
-                    <h4>Value Pack 2</h4>
-                    <p>2 lbs of meat, 16 buns, quart of slaw or beans</p>
-                </div>
-                <span class="menu-item-price">$48.99</span>
-            </div>
-
-            <!-- Sides -->
-            <div class="menu-item hidden" data-category="sides">
-                <div class="menu-item-info">
-                    <h4>Baked Beans</h4>
-                    <p>Sweet and smoky, made in-house</p>
-                </div>
-                <span class="menu-item-price">$2.99</span>
-            </div>
-            <div class="menu-item hidden" data-category="sides">
-                <div class="menu-item-info">
-                    <h4>Coleslaw</h4>
-                    <p>Tangy vinegar-based slaw</p>
-                </div>
-                <span class="menu-item-price">$2.29</span>
-            </div>
-            <div class="menu-item hidden" data-category="sides">
-                <div class="menu-item-info">
-                    <h4>Potato Salad</h4>
-                    <p>Creamy homestyle potato salad</p>
-                </div>
-                <span class="menu-item-price">$2.29</span>
-            </div>
-            <div class="menu-item hidden" data-category="sides">
-                <div class="menu-item-info">
-                    <h4>Cornbread Muffins</h4>
-                    <p>Soft, buttery, and fresh-baked</p>
-                </div>
-                <span class="menu-item-price">$4.99/doz</span>
             </div>
         </div>
+    </section>
 
-        <p class="menu-note reveal">* Prices may vary. Full menu available in-store or for online ordering.</p>
+    <!-- Catering CTA -->
+    <div class="catering-cta reveal">
+        <h2>We Cater ANY Event!</h2>
+        <p>From backyard cookouts to corporate events, weddings to church gatherings — let us bring the BBQ to you. Groups of any size, at a price that fits your budget.</p>
+        <a href="mailto:westbrandon@att.net" class="btn btn-primary">Get A Catering Quote</a>
+    </div>
+
+    <!-- Photos Section -->
+    <section id="photos">
+        <div class="section-header reveal">
+            <span class="section-label">Take A Look</span>
+            <h2 class="section-title">The Pit</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="photo-grid">
+            <div class="photo-item large reveal">
+                <img src="images/interior.webp" alt="Restaurant Interior">
+            </div>
+            <div class="photo-item reveal">
+                <img src="images/bbq-potato.webp" alt="BBQ Baked Potato">
+            </div>
+            <div class="photo-item reveal">
+                <img src="images/nachos.webp" alt="BBQ Nachos">
+            </div>
+            <div class="photo-item reveal">
+                <img src="images/stew1.webp" alt="Brunswick Stew">
+            </div>
+            <div class="photo-item reveal">
+                <img src="images/stew2.webp" alt="Hearty Stew">
+            </div>
+        </div>
     </section>
 
     <!-- Reviews Section -->
     <section id="reviews">
         <div class="section-header reveal">
             <span class="section-label">What People Say</span>
-            <h2 class="section-title">The Reviews</h2>
+            <h2 class="section-title">Reviews</h2>
+            <div class="section-divider"></div>
         </div>
         <div class="reviews-grid">
             <div class="review-card reveal">
                 <div class="review-stars">★★★★★</div>
-                <p class="review-text">This is by far the best BBQ I've had, and the service is great! The Trash Can is legendary.</p>
+                <p class="review-text">"This is by far the best BBQ I've had, and the service is great! The Trash Can is legendary — you have to try it."</p>
                 <div class="review-author">Kassandra N.</div>
                 <div class="review-source">Google Review</div>
             </div>
             <div class="review-card reveal">
                 <div class="review-stars">★★★★★</div>
-                <p class="review-text">Cornbread muffins are always so soft and buttery. The BBQ nachos never disappoint!</p>
+                <p class="review-text">"Cornbread muffins are always so soft and buttery. The BBQ nachos never disappoint! Staff is always friendly."</p>
                 <div class="review-author">Sierra L.</div>
                 <div class="review-source">DoorDash</div>
             </div>
             <div class="review-card reveal">
                 <div class="review-stars">★★★★★</div>
-                <p class="review-text">It feels like you went to your grandma's house to eat. They cook it fresh and it is so good.</p>
+                <p class="review-text">"It feels like you went to your grandma's house to eat. They cook it fresh and it is so good. A Portland gem!"</p>
                 <div class="review-author">Local Regular</div>
                 <div class="review-source">Yelp</div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Banner -->
-    <div class="cta-banner reveal">
-        <h2>We Cater ANY Event!</h2>
-        <p>From backyard cookouts to corporate events, let us bring the BBQ to you.</p>
-        <a href="mailto:westbrandon@att.net" class="btn">Get in Touch</a>
-    </div>
-
     <!-- Contact Section -->
     <section id="contact">
         <div class="section-header reveal">
             <span class="section-label">Find Us</span>
             <h2 class="section-title">Come Hungry</h2>
+            <div class="section-divider"></div>
         </div>
         <div class="contact-grid">
             <div class="contact-info reveal">
@@ -1263,8 +1665,8 @@
                     <h4>Hours</h4>
                     <div class="hours-grid">
                         <div class="hours-row">
-                            <span>Monday - Saturday</span>
-                            <span>10:30 AM - 8:00 PM</span>
+                            <span>Monday – Saturday</span>
+                            <span>10:30 AM – 8:00 PM</span>
                         </div>
                         <div class="hours-row">
                             <span>Sunday</span>
@@ -1294,9 +1696,9 @@
         <div class="footer-logo">The Barbeque Pit</div>
         <div class="footer-links">
             <a href="#about">About</a>
-            <a href="#photos">Photos</a>
             <a href="#menu">Menu</a>
-            <a href="#reviews">Reviews</a>
+            <a href="#specials">Specials</a>
+            <a href="#photos">Photos</a>
             <a href="#contact">Contact</a>
         </div>
         <p class="footer-copy">© 2025 The Barbeque Pit. All rights reserved. | Portland, TN</p>
@@ -1306,11 +1708,7 @@
         // Navbar scroll effect
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 100) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
         });
 
         // Mobile menu toggle
@@ -1322,7 +1720,6 @@
             navLinks.classList.toggle('open');
         });
 
-        // Close mobile menu on link click
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 menuToggle.classList.remove('open');
@@ -1330,72 +1727,19 @@
             });
         });
 
-        // Menu category tabs
-        const menuTabs = document.querySelectorAll('.menu-tab');
-        const menuItems = document.querySelectorAll('.menu-item');
+        // Hero slider
+        const slides = document.querySelectorAll('.hero-slide');
+        let currentSlide = 0;
 
-        menuTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const category = tab.dataset.category;
-                
-                // Update active tab
-                menuTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // Filter menu items with animation
-                menuItems.forEach(item => {
-                    if (item.dataset.category === category) {
-                        item.classList.remove('hidden');
-                        item.style.opacity = '0';
-                        item.style.transform = 'translateY(20px)';
-                        setTimeout(() => {
-                            item.style.opacity = '1';
-                            item.style.transform = 'translateY(0)';
-                        }, 50);
-                    } else {
-                        item.classList.add('hidden');
-                    }
-                });
-            });
-        });
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
 
-        // Add hidden class styling
-        const style = document.createElement('style');
-        style.textContent = '.menu-item.hidden { display: none; } .menu-item { transition: opacity 0.3s ease, transform 0.3s ease; }';
-        document.head.appendChild(style);
+        setInterval(nextSlide, 5000);
 
-        // Scroll reveal animations
-        const revealElements = document.querySelectorAll('.reveal');
-        
-        const revealOnScroll = () => {
-            revealElements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-                
-                if (rect.top < windowHeight - 100) {
-                    el.classList.add('visible');
-                }
-            });
-        };
-
-        window.addEventListener('scroll', revealOnScroll);
-        window.addEventListener('load', revealOnScroll);
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Lightbox functionality
+        // Lightbox
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = lightbox.querySelector('img');
         const lightboxClose = lightbox.querySelector('.lightbox-close');
@@ -1411,19 +1755,45 @@
             });
         });
 
-        lightboxClose.addEventListener('click', closeLightbox);
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) closeLightbox();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeLightbox();
-        });
-
         function closeLightbox() {
             lightbox.classList.remove('active');
             document.body.style.overflow = '';
         }
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', e => {
+            if (e.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Scroll reveal
+        const revealElements = document.querySelectorAll('.reveal');
+
+        function revealOnScroll() {
+            revealElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
     </script>
+
 </body>
 </html>

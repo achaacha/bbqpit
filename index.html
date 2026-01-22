@@ -7,6 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <style>
         :root {
             --red-primary: #C41E3A;
@@ -1204,6 +1207,660 @@
                 padding: 4rem 1.5rem;
             }
         }
+
+        /* ============================================
+           ORDERING MODAL STYLES
+        ============================================ */
+        .bbq-order-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .bbq-order-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .bbq-order-modal {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            max-width: 1200px;
+            background: #f5f2eb;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .bbq-order-overlay.active .bbq-order-modal {
+            transform: translateX(0);
+        }
+        
+        .bbq-modal-header {
+            background: linear-gradient(rgba(26, 24, 22, 0.95), rgba(26, 24, 22, 0.95)), url('images/wood.png');
+            background-size: auto, 300px 300px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            gap: 1rem;
+        }
+        
+        .bbq-modal-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.75rem;
+            color: white;
+            letter-spacing: 0.05em;
+        }
+        
+        .bbq-close-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .bbq-close-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .bbq-order-type-toggle {
+            display: flex;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            padding: 4px;
+        }
+        
+        .bbq-order-type-btn {
+            padding: 0.5rem 1.25rem;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.7);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .bbq-order-type-btn.active {
+            background: white;
+            color: #C41E3A;
+        }
+        
+        .bbq-modal-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .bbq-menu-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: rgba(255,255,255,0.5);
+        }
+        
+        .bbq-category-nav {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: #e8e4d9;
+            overflow-x: auto;
+            flex-shrink: 0;
+            scrollbar-width: none;
+        }
+        
+        .bbq-category-nav::-webkit-scrollbar { display: none; }
+        
+        .bbq-category-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            background: white;
+            color: #5a554d;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 20px;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        
+        .bbq-category-btn:hover { border-color: #C41E3A; color: #C41E3A; }
+        .bbq-category-btn.active { background: #C41E3A; color: white; border-color: #C41E3A; }
+        
+        .bbq-menu-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+        
+        .bbq-menu-category { margin-bottom: 2rem; }
+        
+        .bbq-category-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: #C41E3A;
+            letter-spacing: 0.05em;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #C41E3A;
+            margin-bottom: 0.5rem;
+        }
+        
+        .bbq-category-note {
+            font-size: 0.85rem;
+            color: #5a554d;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .bbq-menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+        
+        .bbq-item-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .bbq-item-card:hover {
+            border-color: #C41E3A;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.15);
+        }
+        
+        .bbq-item-info { flex: 1; }
+        
+        .bbq-item-name {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #2d2a26;
+            margin-bottom: 0.25rem;
+        }
+        
+        .bbq-item-desc {
+            font-size: 0.8rem;
+            color: #5a554d;
+            line-height: 1.4;
+        }
+        
+        .bbq-item-price {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.25rem;
+            color: #C41E3A;
+            white-space: nowrap;
+        }
+        
+        .bbq-add-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #C41E3A;
+            background: white;
+            color: #C41E3A;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .bbq-add-btn:hover { background: #C41E3A; color: white; }
+        
+        .bbq-cart-section {
+            width: 360px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #e8e4d9;
+            flex-shrink: 0;
+        }
+        
+        .bbq-cart-header {
+            background: #1a1816;
+            color: white;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .bbq-cart-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .bbq-cart-count {
+            background: #C41E3A;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+        }
+        
+        .bbq-cart-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 1.5rem;
+        }
+        
+        .bbq-cart-empty {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #5a554d;
+        }
+        
+        .bbq-cart-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.3;
+        }
+        
+        .bbq-cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e8e4d9;
+            gap: 0.75rem;
+        }
+        
+        .bbq-cart-item:last-child { border-bottom: none; }
+        
+        .bbq-cart-item-info { flex: 1; min-width: 0; }
+        .bbq-cart-item-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .bbq-cart-item-mods { font-size: 0.75rem; color: #5a554d; }
+        .bbq-cart-item-controls { display: flex; align-items: center; gap: 0.5rem; }
+        
+        .bbq-qty-btn {
+            width: 26px;
+            height: 26px;
+            border: 1px solid #e8e4d9;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .bbq-qty-btn:hover { border-color: #C41E3A; color: #C41E3A; }
+        .bbq-cart-item-qty { font-weight: 600; min-width: 20px; text-align: center; }
+        .bbq-cart-item-price { font-weight: 700; color: #2d2a26; white-space: nowrap; }
+        
+        .bbq-schedule-section {
+            padding: 1rem 1.5rem;
+            border-top: 2px dashed #e8e4d9;
+            flex-shrink: 0;
+        }
+        
+        .bbq-schedule-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            color: #2d2a26;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .bbq-catering-notice {
+            background: rgba(196, 30, 58, 0.08);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #9a1729;
+            margin-bottom: 0.75rem;
+        }
+        
+        .bbq-schedule-options { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+        
+        .bbq-schedule-btn {
+            flex: 1;
+            padding: 0.6rem;
+            border: 2px solid #e8e4d9;
+            background: white;
+            border-radius: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .bbq-schedule-btn.active { border-color: #C41E3A; background: rgba(196, 30, 58, 0.05); color: #C41E3A; }
+        .bbq-schedule-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .bbq-schedule-inputs { display: flex; gap: 0.5rem; }
+        
+        .bbq-schedule-input {
+            flex: 1;
+            padding: 0.6rem;
+            border: 2px solid #e8e4d9;
+            border-radius: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+        }
+        
+        .bbq-schedule-input:focus { outline: none; border-color: #C41E3A; }
+        
+        .bbq-cart-totals {
+            padding: 1rem 1.5rem;
+            background: #f5f2eb;
+            border-top: 2px solid #e8e4d9;
+            flex-shrink: 0;
+        }
+        
+        .bbq-total-row { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-size: 0.9rem; }
+        
+        .bbq-total-row.grand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            color: #2d2a26;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 2px solid #e8e4d9;
+        }
+        
+        .bbq-checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #C41E3A;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.75rem;
+        }
+        
+        .bbq-checkout-btn:hover:not(:disabled) {
+            background: #9a1729;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+        }
+        
+        .bbq-checkout-btn:disabled { background: #5a554d; cursor: not-allowed; }
+        
+        .bbq-item-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .bbq-item-modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .bbq-item-modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        
+        .bbq-item-modal-overlay.active .bbq-item-modal { transform: translateY(0); }
+        
+        .bbq-item-modal-header {
+            background: #C41E3A;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .bbq-item-modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.75rem; letter-spacing: 0.05em; }
+        .bbq-item-modal-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; }
+        
+        .bbq-item-modal-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bbq-item-modal-close:hover { background: rgba(255,255,255,0.3); }
+        
+        .bbq-item-modal-body { padding: 1.5rem; overflow-y: auto; max-height: calc(90vh - 220px); }
+        .bbq-modifier-section { margin-bottom: 1.5rem; }
+        .bbq-modifier-title { font-weight: 600; margin-bottom: 0.75rem; color: #2d2a26; }
+        .bbq-modifier-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        
+        .bbq-modifier-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border: 2px solid #e8e4d9;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .bbq-modifier-option:hover { border-color: #C41E3A; }
+        .bbq-modifier-option.selected { border-color: #C41E3A; background: rgba(196, 30, 58, 0.05); }
+        
+        .bbq-modifier-check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e8e4d9;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 0.75rem;
+            color: transparent;
+        }
+        
+        .bbq-modifier-option.selected .bbq-modifier-check { background: #C41E3A; border-color: #C41E3A; color: white; }
+        .bbq-modifier-label { flex: 1; font-size: 0.9rem; }
+        .bbq-modifier-price { font-size: 0.85rem; color: #5a554d; }
+        
+        .bbq-special-instructions textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e8e4d9;
+            border-radius: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .bbq-special-instructions textarea:focus { outline: none; border-color: #C41E3A; }
+        
+        .bbq-item-modal-footer {
+            padding: 1.5rem;
+            background: #f5f2eb;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .bbq-modal-qty {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 2px solid #e8e4d9;
+        }
+        
+        .bbq-modal-qty-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #e8e4d9;
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bbq-modal-qty-btn:hover { background: #C41E3A; color: white; }
+        .bbq-modal-qty-value { font-weight: 700; font-size: 1.1rem; min-width: 30px; text-align: center; }
+        
+        .bbq-modal-add-btn {
+            flex: 1;
+            padding: 1rem;
+            background: #C41E3A;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .bbq-modal-add-btn:hover { background: #9a1729; }
+        
+        .bbq-checkout-form { display: flex; flex-direction: column; gap: 1rem; }
+        .bbq-form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .bbq-form-group label { font-weight: 600; font-size: 0.85rem; color: #2d2a26; }
+        
+        .bbq-form-group input {
+            padding: 0.875rem;
+            border: 2px solid #e8e4d9;
+            border-radius: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .bbq-form-group input:focus { outline: none; border-color: #C41E3A; }
+        .bbq-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        
+        .bbq-success-message { text-align: center; padding: 3rem 2rem; }
+        
+        .bbq-success-icon {
+            width: 80px;
+            height: 80px;
+            background: #2d5a27;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        .bbq-success-message h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: #2d2a26; margin-bottom: 0.5rem; }
+        .bbq-success-message p { color: #5a554d; margin-bottom: 1rem; }
+        
+        .bbq-order-number {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: #e8e4d9;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        @media (max-width: 900px) {
+            .bbq-order-modal { max-width: 100%; }
+            .bbq-modal-body { flex-direction: column; }
+            
+            .bbq-cart-section {
+                width: 100%;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                max-height: 55vh;
+                border-left: none;
+                border-top: 2px solid #e8e4d9;
+                transform: translateY(calc(100% - 70px));
+                transition: transform 0.3s ease;
+                z-index: 10;
+            }
+            
+            .bbq-cart-section.expanded { transform: translateY(0); }
+            .bbq-cart-header { cursor: pointer; }
+            .bbq-cart-header::after { content: '▲'; font-size: 0.75rem; opacity: 0.5; }
+            .bbq-cart-section.expanded .bbq-cart-header::after { content: '▼'; }
+            .bbq-menu-content { padding-bottom: 100px; }
+            .bbq-menu-grid { grid-template-columns: 1fr; }
+            .bbq-form-row { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 480px) {
+            .bbq-modal-header { flex-wrap: wrap; gap: 0.75rem; }
+            .bbq-modal-title { font-size: 1.5rem; order: 1; }
+            .bbq-close-btn { order: 2; margin-left: auto; }
+            .bbq-order-type-toggle { order: 3; width: 100%; }
+            .bbq-order-type-btn { flex: 1; }
+        }
     </style>
 </head>
 <body>
@@ -1219,7 +1876,7 @@
             <li><a href="#specials">Specials</a></li>
             <li><a href="#photos">Photos</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li><a href="https://www.doordash.com/store/barbeque-pit-portland-2534016/" target="_blank" class="nav-cta">Order Online</a></li>
+            <li><a href="#" onclick="openOrderModal(); return false;" class="nav-cta">Order Online</a></li>
         </ul>
         <div class="menu-toggle" id="menuToggle">
             <span></span>
@@ -1247,7 +1904,7 @@
             <h1>Real Smoke.<br><span>Real Flavor.</span></h1>
             <p class="hero-tagline">Hand-smoked BBQ the way it was meant to be. Tender, juicy, and falling off the bone. Come hungry, leave happy.</p>
             <div class="hero-cta">
-                <a href="https://www.doordash.com/store/barbeque-pit-portland-2534016/" target="_blank" class="btn btn-primary">Order Online</a>
+                <a href="#" onclick="openOrderModal(); return false;" class="btn btn-primary">Order Online</a>
                 <a href="#menu" class="btn btn-outline">View Menu</a>
             </div>
             <div class="hero-features">
@@ -1527,7 +2184,7 @@
             </div>
         </div>
         <div class="menu-cta reveal">
-            <a href="https://www.doordash.com/store/barbeque-pit-portland-2534016/" target="_blank" class="btn btn-primary">Order Online Now</a>
+            <a href="#" onclick="openOrderModal(); return false;" class="btn btn-primary">Order Online Now</a>
         </div>
     </section>
 
@@ -1578,7 +2235,7 @@
     <div class="catering-cta reveal">
         <h2>We Cater ANY Event!</h2>
         <p>From backyard cookouts to corporate events, weddings to church gatherings — let us bring the BBQ to you. Groups of any size, at a price that fits your budget.</p>
-        <a href="mailto:westbrandon@att.net" class="btn btn-primary">Get A Catering Quote</a>
+        <a href="/cdn-cgi/l/email-protection#d9aebcaaadbbabb8b7bdb6b799b8adadf7b7bcad" class="btn btn-primary">Get A Catering Quote</a>
     </div>
 
     <!-- Photos Section -->
@@ -1658,7 +2315,7 @@
                     <h4>Contact</h4>
                     <p>
                         <a href="tel:6153237878">(615) 323-7878</a><br>
-                        <a href="mailto:westbrandon@att.net">westbrandon@att.net</a>
+                        <a href="/cdn-cgi/l/email-protection#0c7b697f786e7e6d626863624c6d787822626978"><span class="__cf_email__" data-cfemail="681f0d1b1c0a1a09060c070628091c1c46060d1c">[email&#160;protected]</span></a>
                     </p>
                 </div>
                 <div class="contact-block">
@@ -1704,7 +2361,7 @@
         <p class="footer-copy">© 2025 The Barbeque Pit. All rights reserved. | Portland, TN</p>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Navbar scroll effect
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
@@ -1787,13 +2444,486 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
         });
+
+        // Open order modal function
+        function openOrderModal() {
+            window.dispatchEvent(new CustomEvent('openOrderModal'));
+        }
     </script>
 
+    <!-- React Order Modal Root -->
+    <div id="order-modal-root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Menu Data
+        const menuData = {
+            sandwiches: {
+                title: "Sandwiches",
+                items: [
+                    { id: 'pulled-pork-sandwich', name: 'Pulled Pork', price: 7.49, description: 'Slow-smoked pulled pork on a toasted bun' },
+                    { id: 'chopped-chicken-sandwich', name: 'Chopped Chicken', price: 7.49, description: 'Tender smoked chicken, hand-chopped' },
+                    { id: 'smoked-turkey-sandwich', name: 'Smoked Turkey', price: 7.99, description: 'Sliced smoked turkey breast' },
+                    { id: 'beef-brisket-sandwich', name: 'Beef Brisket', price: 9.99, description: 'Sliced beef brisket, smoked to perfection' },
+                ]
+            },
+            plates: {
+                title: "Plates",
+                note: "Served with your choice of two sides",
+                items: [
+                    { id: 'one-meat-plate', name: 'One Meat Plate', price: 11.99, description: 'Choice of one smoked meat with two sides', hasMeat: 1, hasSides: true },
+                    { id: 'two-meat-plate', name: 'Two Meat Plate', price: 14.99, description: 'Choice of two smoked meats with two sides', hasMeat: 2, hasSides: true },
+                    { id: 'three-meat-plate', name: 'Three Meat Plate', price: 17.99, description: 'Choice of three smoked meats with two sides', hasMeat: 3, hasSides: true },
+                    { id: 'rib-plate', name: 'Rib Plate', price: 15.99, description: 'Friday & Saturday only — half rack with two sides', hasSides: true },
+                ]
+            },
+            specialties: {
+                title: "Specialties",
+                items: [
+                    { id: 'trash-can', name: 'The Trash Can', price: 12.99, description: 'Loaded bowl with smoked meats, beans, slaw & fixings' },
+                    { id: 'bbq-nachos', name: 'BBQ Nachos', price: 10.99, description: 'Tortilla chips topped with pulled pork & queso', hasMeat: 1 },
+                    { id: 'bbq-baked-potato', name: 'BBQ Baked Potato', price: 9.99, description: 'Loaded potato with your choice of meat', hasMeat: 1 },
+                    { id: 'bbq-salad', name: 'BBQ Salad', price: 10.99, description: 'Fresh greens topped with smoked meat', hasMeat: 1 },
+                ]
+            },
+            sides: {
+                title: "Sides",
+                items: [
+                    { id: 'baked-beans', name: 'Baked Beans', price: 2.99, description: 'Sweet & savory pit beans' },
+                    { id: 'coleslaw', name: 'Coleslaw', price: 2.29, description: 'Creamy homestyle slaw' },
+                    { id: 'potato-salad', name: 'Potato Salad', price: 2.29, description: 'Classic Southern potato salad' },
+                    { id: 'mac-cheese', name: 'Mac & Cheese', price: 2.99, description: 'Creamy, cheesy goodness' },
+                    { id: 'cornbread', name: 'Cornbread Muffins', price: 4.99, description: 'Dozen fresh-baked cornbread muffins', priceLabel: '$4.99/doz' },
+                ]
+            },
+            'by-the-pound': {
+                title: "By The Pound",
+                note: "Perfect for catering or feeding a crowd",
+                items: [
+                    { id: 'pork-lb', name: 'Pulled Pork', price: 13.99, description: 'Slow-smoked pulled pork by the pound', priceLabel: '$13.99/lb' },
+                    { id: 'chicken-lb', name: 'Chopped Chicken', price: 13.99, description: 'Smoked chopped chicken by the pound', priceLabel: '$13.99/lb' },
+                    { id: 'turkey-lb', name: 'Smoked Turkey', price: 14.99, description: 'Sliced smoked turkey by the pound', priceLabel: '$14.99/lb' },
+                    { id: 'brisket-lb', name: 'Beef Brisket', price: 18.99, description: 'Smoked beef brisket by the pound', priceLabel: '$18.99/lb' },
+                ]
+            },
+            drinks: {
+                title: "Drinks & Dessert",
+                items: [
+                    { id: 'sweet-tea', name: 'Sweet Tea', price: 2.49, description: 'Classic Southern sweet tea' },
+                    { id: 'unsweet-tea', name: 'Unsweet Tea', price: 2.49, description: 'Fresh brewed unsweetened tea' },
+                    { id: 'lemonade', name: 'Lemonade', price: 2.49, description: 'Fresh-squeezed lemonade' },
+                    { id: 'soft-drink', name: 'Soft Drink', price: 2.29, description: 'Coke, Diet Coke, Sprite, Dr Pepper' },
+                    { id: 'banana-pudding', name: 'Banana Pudding', price: 3.99, description: 'Homemade Southern banana pudding' },
+                ]
+            }
+        };
+
+        const meatOptions = [
+            { id: 'pulled-pork', name: 'Pulled Pork', price: 0 },
+            { id: 'chopped-chicken', name: 'Chopped Chicken', price: 0 },
+            { id: 'smoked-turkey', name: 'Smoked Turkey', price: 0.50 },
+            { id: 'beef-brisket', name: 'Beef Brisket', price: 2.00 }
+        ];
+
+        const sideOptions = [
+            { id: 'baked-beans', name: 'Baked Beans' },
+            { id: 'coleslaw', name: 'Coleslaw' },
+            { id: 'potato-salad', name: 'Potato Salad' },
+            { id: 'mac-cheese', name: 'Mac & Cheese' }
+        ];
+
+        const TAX_RATE = 0.0975;
+
+        function OrderModal({ isOpen, onClose }) {
+            const [cart, setCart] = useState([]);
+            const [orderType, setOrderType] = useState('pickup');
+            const [scheduleType, setScheduleType] = useState('asap');
+            const [scheduleDate, setScheduleDate] = useState('');
+            const [scheduleTime, setScheduleTime] = useState('');
+            const [activeCategory, setActiveCategory] = useState('sandwiches');
+            const [cartExpanded, setCartExpanded] = useState(false);
+            
+            const [itemModalOpen, setItemModalOpen] = useState(false);
+            const [currentItem, setCurrentItem] = useState(null);
+            const [itemQty, setItemQty] = useState(1);
+            const [selectedMeats, setSelectedMeats] = useState([]);
+            const [selectedSides, setSelectedSides] = useState([]);
+            const [specialInstructions, setSpecialInstructions] = useState('');
+            
+            const [checkoutOpen, setCheckoutOpen] = useState(false);
+            const [customerName, setCustomerName] = useState('');
+            const [customerPhone, setCustomerPhone] = useState('');
+            const [customerEmail, setCustomerEmail] = useState('');
+            const [orderNotes, setOrderNotes] = useState('');
+            
+            const [successOpen, setSuccessOpen] = useState(false);
+            const [orderNumber, setOrderNumber] = useState('');
+
+            useEffect(() => {
+                if (isOpen) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+                return () => { document.body.style.overflow = ''; };
+            }, [isOpen]);
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.totalPrice * item.quantity), 0);
+            const tax = subtotal * TAX_RATE;
+            const total = subtotal + tax;
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            const openItemModal = (item) => {
+                setCurrentItem(item);
+                setItemQty(1);
+                setSelectedMeats([]);
+                setSelectedSides([]);
+                setSpecialInstructions('');
+                setItemModalOpen(true);
+            };
+
+            const calculateItemTotal = () => {
+                if (!currentItem) return 0;
+                let itemPrice = currentItem.price;
+                selectedMeats.forEach(meatId => {
+                    const meat = meatOptions.find(m => m.id === meatId);
+                    if (meat) itemPrice += meat.price;
+                });
+                return itemPrice * itemQty;
+            };
+
+            const addToCart = () => {
+                const mods = [
+                    ...selectedMeats.map(id => meatOptions.find(m => m.id === id)?.name).filter(Boolean),
+                    ...selectedSides.map(id => sideOptions.find(s => s.id === id)?.name).filter(Boolean)
+                ];
+                
+                let modPrice = 0;
+                selectedMeats.forEach(meatId => {
+                    const meat = meatOptions.find(m => m.id === meatId);
+                    if (meat) modPrice += meat.price;
+                });
+
+                const cartItem = {
+                    id: currentItem.id + '-' + Date.now(),
+                    name: currentItem.name,
+                    basePrice: currentItem.price,
+                    modPrice: modPrice,
+                    totalPrice: currentItem.price + modPrice,
+                    quantity: itemQty,
+                    modifiers: mods,
+                    notes: specialInstructions
+                };
+
+                setCart([...cart, cartItem]);
+                setItemModalOpen(false);
+                setCartExpanded(true);
+            };
+
+            const updateCartQty = (index, delta) => {
+                const newCart = [...cart];
+                newCart[index].quantity += delta;
+                if (newCart[index].quantity <= 0) {
+                    newCart.splice(index, 1);
+                }
+                setCart(newCart);
+            };
+
+            const toggleMeat = (meatId) => {
+                const maxMeats = currentItem?.hasMeat || 1;
+                if (selectedMeats.includes(meatId)) {
+                    setSelectedMeats(selectedMeats.filter(id => id !== meatId));
+                } else if (selectedMeats.length < maxMeats) {
+                    setSelectedMeats([...selectedMeats, meatId]);
+                }
+            };
+
+            const toggleSide = (sideId) => {
+                if (selectedSides.includes(sideId)) {
+                    setSelectedSides(selectedSides.filter(id => id !== sideId));
+                } else if (selectedSides.length < 2) {
+                    setSelectedSides([...selectedSides, sideId]);
+                }
+            };
+
+            const placeOrder = () => {
+                if (!customerName || !customerPhone) {
+                    alert('Please enter your name and phone number.');
+                    return;
+                }
+
+                const orderNum = 'BBQ-' + Math.floor(1000 + Math.random() * 9000);
+                setOrderNumber(orderNum);
+
+                console.log('Order placed:', {
+                    orderNumber: orderNum,
+                    type: orderType,
+                    schedule: scheduleType === 'later' ? { date: scheduleDate, time: scheduleTime } : 'ASAP',
+                    customer: { name: customerName, phone: customerPhone, email: customerEmail },
+                    items: cart,
+                    totals: { subtotal, tax, total },
+                    notes: orderNotes
+                });
+
+                setCheckoutOpen(false);
+                setSuccessOpen(true);
+            };
+
+            const startNewOrder = () => {
+                setCart([]);
+                setSuccessOpen(false);
+                setCustomerName('');
+                setCustomerPhone('');
+                setCustomerEmail('');
+                setOrderNotes('');
+                onClose();
+            };
+
+            const getMinDate = () => {
+                const date = new Date();
+                if (orderType === 'catering') {
+                    date.setDate(date.getDate() + 1);
+                }
+                return date.toISOString().split('T')[0];
+            };
+
+            return (
+                <>
+                    <div className={`bbq-order-overlay ${isOpen ? 'active' : ''}`} onClick={onClose}>
+                        <div className="bbq-order-modal" onClick={e => e.stopPropagation()}>
+                            <div className="bbq-modal-header">
+                                <div className="bbq-modal-title">Order Online</div>
+                                <div className="bbq-order-type-toggle">
+                                    <button className={`bbq-order-type-btn ${orderType === 'pickup' ? 'active' : ''}`} onClick={() => setOrderType('pickup')}>Pickup</button>
+                                    <button className={`bbq-order-type-btn ${orderType === 'catering' ? 'active' : ''}`} onClick={() => { setOrderType('catering'); setScheduleType('later'); }}>Catering</button>
+                                </div>
+                                <button className="bbq-close-btn" onClick={onClose}>×</button>
+                            </div>
+
+                            <div className="bbq-modal-body">
+                                <div className="bbq-menu-section">
+                                    <div className="bbq-category-nav">
+                                        {Object.keys(menuData).map(cat => (
+                                            <button key={cat} className={`bbq-category-btn ${activeCategory === cat ? 'active' : ''}`} onClick={() => { setActiveCategory(cat); document.getElementById(`cat-${cat}`)?.scrollIntoView({ behavior: 'smooth' }); }}>
+                                                {menuData[cat].title}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="bbq-menu-content">
+                                        {Object.entries(menuData).map(([catKey, category]) => (
+                                            <div key={catKey} className="bbq-menu-category" id={`cat-${catKey}`}>
+                                                <h3 className="bbq-category-title">{category.title}</h3>
+                                                {category.note && <p className="bbq-category-note">{category.note}</p>}
+                                                <div className="bbq-menu-grid">
+                                                    {category.items.map(item => (
+                                                        <div key={item.id} className="bbq-item-card" onClick={() => openItemModal(item)}>
+                                                            <div className="bbq-item-info">
+                                                                <div className="bbq-item-name">{item.name}</div>
+                                                                <div className="bbq-item-desc">{item.description}</div>
+                                                            </div>
+                                                            <div className="bbq-item-price">{item.priceLabel || `$${item.price.toFixed(2)}`}</div>
+                                                            <button className="bbq-add-btn" onClick={(e) => { e.stopPropagation(); openItemModal(item); }}>+</button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className={`bbq-cart-section ${cartExpanded ? 'expanded' : ''}`}>
+                                    <div className="bbq-cart-header" onClick={() => setCartExpanded(!cartExpanded)}>
+                                        <h2 className="bbq-cart-title">Your Order</h2>
+                                        <span className="bbq-cart-count">{cartCount}</span>
+                                    </div>
+
+                                    <div className="bbq-cart-body">
+                                        {cart.length === 0 ? (
+                                            <div className="bbq-cart-empty">
+                                                <div className="bbq-cart-empty-icon">🍖</div>
+                                                <p>Your cart is empty</p>
+                                            </div>
+                                        ) : (
+                                            cart.map((item, index) => (
+                                                <div key={item.id} className="bbq-cart-item">
+                                                    <div className="bbq-cart-item-info">
+                                                        <div className="bbq-cart-item-name">{item.name}</div>
+                                                        {item.modifiers.length > 0 && <div className="bbq-cart-item-mods">{item.modifiers.join(', ')}</div>}
+                                                        {item.notes && <div className="bbq-cart-item-mods">"{item.notes}"</div>}
+                                                    </div>
+                                                    <div className="bbq-cart-item-controls">
+                                                        <button className="bbq-qty-btn" onClick={() => updateCartQty(index, -1)}>−</button>
+                                                        <span className="bbq-cart-item-qty">{item.quantity}</span>
+                                                        <button className="bbq-qty-btn" onClick={() => updateCartQty(index, 1)}>+</button>
+                                                    </div>
+                                                    <div className="bbq-cart-item-price">${(item.totalPrice * item.quantity).toFixed(2)}</div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+
+                                    <div className="bbq-schedule-section">
+                                        <div className="bbq-schedule-title">When do you want it?</div>
+                                        {orderType === 'catering' && <div className="bbq-catering-notice">⏰ Catering orders require at least 24 hours advance notice.</div>}
+                                        <div className="bbq-schedule-options">
+                                            <button className={`bbq-schedule-btn ${scheduleType === 'asap' ? 'active' : ''}`} onClick={() => setScheduleType('asap')} disabled={orderType === 'catering'}>ASAP</button>
+                                            <button className={`bbq-schedule-btn ${scheduleType === 'later' ? 'active' : ''}`} onClick={() => setScheduleType('later')}>Schedule</button>
+                                        </div>
+                                        {scheduleType === 'later' && (
+                                            <div className="bbq-schedule-inputs">
+                                                <input type="date" className="bbq-schedule-input" min={getMinDate()} value={scheduleDate} onChange={e => setScheduleDate(e.target.value)} />
+                                                <input type="time" className="bbq-schedule-input" value={scheduleTime} onChange={e => setScheduleTime(e.target.value)} />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="bbq-cart-totals">
+                                        <div className="bbq-total-row"><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
+                                        <div className="bbq-total-row"><span>Tax (9.75%)</span><span>${tax.toFixed(2)}</span></div>
+                                        <div className="bbq-total-row grand"><span>Total</span><span>${total.toFixed(2)}</span></div>
+                                        <button className="bbq-checkout-btn" disabled={cart.length === 0} onClick={() => setCheckoutOpen(true)}>Checkout</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={`bbq-item-modal-overlay ${itemModalOpen ? 'active' : ''}`} onClick={() => setItemModalOpen(false)}>
+                        <div className="bbq-item-modal" onClick={e => e.stopPropagation()}>
+                            <div className="bbq-item-modal-header">
+                                <div>
+                                    <div className="bbq-item-modal-title">{currentItem?.name}</div>
+                                    <div className="bbq-item-modal-price">${currentItem?.price.toFixed(2)}</div>
+                                </div>
+                                <button className="bbq-item-modal-close" onClick={() => setItemModalOpen(false)}>×</button>
+                            </div>
+
+                            <div className="bbq-item-modal-body">
+                                {currentItem?.hasMeat && (
+                                    <div className="bbq-modifier-section">
+                                        <div className="bbq-modifier-title">Choose Your Meat{currentItem.hasMeat > 1 ? 's' : ''} (select {currentItem.hasMeat})</div>
+                                        <div className="bbq-modifier-options">
+                                            {meatOptions.map(meat => (
+                                                <div key={meat.id} className={`bbq-modifier-option ${selectedMeats.includes(meat.id) ? 'selected' : ''}`} onClick={() => toggleMeat(meat.id)}>
+                                                    <span className="bbq-modifier-check">✓</span>
+                                                    <span className="bbq-modifier-label">{meat.name}</span>
+                                                    {meat.price > 0 && <span className="bbq-modifier-price">+${meat.price.toFixed(2)}</span>}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {currentItem?.hasSides && (
+                                    <div className="bbq-modifier-section">
+                                        <div className="bbq-modifier-title">Choose Two Sides</div>
+                                        <div className="bbq-modifier-options">
+                                            {sideOptions.map(side => (
+                                                <div key={side.id} className={`bbq-modifier-option ${selectedSides.includes(side.id) ? 'selected' : ''}`} onClick={() => toggleSide(side.id)}>
+                                                    <span className="bbq-modifier-check">✓</span>
+                                                    <span className="bbq-modifier-label">{side.name}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="bbq-special-instructions">
+                                    <div className="bbq-modifier-title">Special Instructions</div>
+                                    <textarea placeholder="Any special requests?" value={specialInstructions} onChange={e => setSpecialInstructions(e.target.value)} />
+                                </div>
+                            </div>
+
+                            <div className="bbq-item-modal-footer">
+                                <div className="bbq-modal-qty">
+                                    <button className="bbq-modal-qty-btn" onClick={() => setItemQty(Math.max(1, itemQty - 1))}>−</button>
+                                    <span className="bbq-modal-qty-value">{itemQty}</span>
+                                    <button className="bbq-modal-qty-btn" onClick={() => setItemQty(itemQty + 1)}>+</button>
+                                </div>
+                                <button className="bbq-modal-add-btn" onClick={addToCart}>Add to Cart — ${calculateItemTotal().toFixed(2)}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={`bbq-item-modal-overlay ${checkoutOpen ? 'active' : ''}`} onClick={() => setCheckoutOpen(false)}>
+                        <div className="bbq-item-modal" onClick={e => e.stopPropagation()}>
+                            <div className="bbq-item-modal-header">
+                                <div className="bbq-item-modal-title">Checkout</div>
+                                <button className="bbq-item-modal-close" onClick={() => setCheckoutOpen(false)}>×</button>
+                            </div>
+
+                            <div className="bbq-item-modal-body">
+                                <div className="bbq-checkout-form">
+                                    <div className="bbq-form-group">
+                                        <label>Name *</label>
+                                        <input type="text" placeholder="Your name" value={customerName} onChange={e => setCustomerName(e.target.value)} />
+                                    </div>
+                                    <div className="bbq-form-row">
+                                        <div className="bbq-form-group">
+                                            <label>Phone *</label>
+                                            <input type="tel" placeholder="(615) 555-0123" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} />
+                                        </div>
+                                        <div className="bbq-form-group">
+                                            <label>Email</label>
+                                            <input type="email" placeholder="you@email.com" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} />
+                                        </div>
+                                    </div>
+                                    <div className="bbq-form-group">
+                                        <label>Special Instructions</label>
+                                        <input type="text" placeholder="Any special requests?" value={orderNotes} onChange={e => setOrderNotes(e.target.value)} />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bbq-item-modal-footer" style={{ flexDirection: 'column', gap: '0.5rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', fontSize: '1.1rem', fontWeight: 600 }}>
+                                    <span>Total</span>
+                                    <span>${total.toFixed(2)}</span>
+                                </div>
+                                <button className="bbq-modal-add-btn" style={{ width: '100%' }} onClick={placeOrder}>Place Order</button>
+                                <p style={{ fontSize: '0.75rem', color: '#5a554d', textAlign: 'center' }}>Pay when you pick up — cash or card accepted</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={`bbq-item-modal-overlay ${successOpen ? 'active' : ''}`}>
+                        <div className="bbq-item-modal" onClick={e => e.stopPropagation()}>
+                            <div className="bbq-item-modal-body">
+                                <div className="bbq-success-message">
+                                    <div className="bbq-success-icon">✓</div>
+                                    <h2>Order Placed!</h2>
+                                    <p>We've received your order and are getting it ready.</p>
+                                    <div className="bbq-order-number">#{orderNumber}</div>
+                                    <p style={{ marginTop: '1.5rem', fontSize: '0.9rem' }}>You'll receive a confirmation text at the number provided.</p>
+                                    <button className="bbq-checkout-btn" style={{ marginTop: '1.5rem' }} onClick={startNewOrder}>Done</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+
+        function App() {
+            const [orderModalOpen, setOrderModalOpen] = useState(false);
+
+            useEffect(() => {
+                const handleOpen = () => setOrderModalOpen(true);
+                window.addEventListener('openOrderModal', handleOpen);
+                return () => window.removeEventListener('openOrderModal', handleOpen);
+            }, []);
+
+            return <OrderModal isOpen={orderModalOpen} onClose={() => setOrderModalOpen(false)} />;
+        }
+
+        ReactDOM.createRoot(document.getElementById('order-modal-root')).render(<App />);
+    </script>
 </body>
 </html>
